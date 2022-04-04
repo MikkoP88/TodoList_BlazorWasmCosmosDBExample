@@ -1,0 +1,63 @@
+﻿@page "/item/create"
+@using BlazorWasmCosmosDBExample.Shared.Models
+@inject HttpClient Http 
+@inject NavigationManager Navigator
+
+<h2>Create a new To-Do Item</h2>
+
+    <EditForm Model="@item" OnValidSubmit="@HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <div class="form-horizontal">
+        <h4>Item</h4>
+        <hr />
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="Name">Name</label>
+            <div class="col-md-10">
+                <InputText class="form-control text-box single-line" name="Name" type="text"  id="name" @bind-Value="item.Name" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="Description">Description</label>
+            <div class="col-md-10">
+                <InputText class="form-control text-box single-line" id="Description" name="Description" type="text" @bind-Value="item.Description" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2" for="Completed">Completed</label>
+
+            <div class="col-md-10">
+                <div class="checkbox">
+                    <InputCheckbox class="check-box" data-val="true" id="Completed" name="Completed" type="checkbox" @bind-Value="item.Completed" />
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button class="btn btn-primary" type="submit">Create</button>
+            </div>
+        </div>
+    </div>
+        <div>
+             <a href='/'>Back to List</a>
+        </div>
+    <ValidationSummary />
+    </EditForm>
+
+
+@code {
+
+    private Item item  = new();
+
+    private async Task HandleValidSubmit()
+    {
+        item.Id = "";
+
+        var response = await Http.PostAsJsonAsync("Item/create", item);
+
+        Navigator.NavigateTo("/");
+    }
+}

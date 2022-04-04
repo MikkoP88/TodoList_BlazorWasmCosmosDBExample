@@ -1,0 +1,58 @@
+﻿@page "/"
+@using BlazorWasmCosmosDBExample.Shared.Models  
+@inject HttpClient Http 
+
+<h2>List of To-Do Items</h2>
+
+@if (items == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Completed
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in items)
+        {
+            <tr>
+                <td>
+                    @item.Name
+                </td>
+                <td>
+                    @item.Description
+                </td>
+                <td>
+                    @item.Completed
+                </td>
+                <td>
+                    <a href='/Item/Edit/@item.Id'>Edit</a>
+                    <a href='/Item/Details/@item.Id'>Details</a>
+                    <a href='/Item/Delete/@item.Id'>Delete</a>
+                </td>
+            </tr>
+        }
+    </table>
+
+    <a href='/Item/Create'>Create New</a>
+}
+
+@code {
+    private Item[]? items;
+
+    protected override async Task OnInitializedAsync()
+    {
+        items = await Http.GetFromJsonAsync<Item[]>("Item");
+    }
+}

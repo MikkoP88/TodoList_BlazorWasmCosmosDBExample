@@ -1,0 +1,56 @@
+﻿@page "/item/details/{itemId}"
+@using BlazorWasmCosmosDBExample.Shared.Models
+@inject HttpClient Http 
+@inject NavigationManager Navigator
+
+<h2>View To-Do Item Details</h2>
+
+@if (item == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Name
+        </dt>
+        <dd>
+            @item.Name
+        </dd>
+
+        <dt>
+            Description
+        </dt>
+
+        <dd>
+            @item.Description
+        </dd>
+
+        <dt>
+            Completed
+        </dt>
+
+        <dd>
+            @item.Completed
+        </dd>
+    </dl>
+    <a href='/Item/Edit/@item.Id'>Edit</a>
+    <a href='/'>Back to List</a>
+</div>
+}
+
+
+@code {
+    [Parameter] 
+    public string itemId { get; set; }
+
+    private Item? item;
+
+    protected override async Task OnInitializedAsync()
+    {
+        item = await Http.GetFromJsonAsync<Item>($"Item/{itemId}");
+    }
+}
